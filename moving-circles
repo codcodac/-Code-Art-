@@ -1,0 +1,66 @@
+const canvasSketch = require('canvas-sketch');
+
+const settings = {
+  dimensions: [ 2048, 2048 ],
+  animate: true
+};
+
+const sketch = () => {
+  let circles = [];
+  for (let i=0; i<100; i++){
+    circles.push(new Circle(Math.random()*2048, Math.random()*2048, Math.random()*20));
+
+  }
+  return ({ context, width, height }) => {
+    context.fillStyle = 'aquamarine';
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = 'white';
+    context.lineWidth = 7;
+    const myCircle = new Circle(108, 108, 75);
+    circles.forEach( circle => {
+      circle.draw(context);
+      circle.move(context);
+      circle.bounce(width, height);
+
+    })
+  };
+};
+
+canvasSketch(sketch, settings);
+
+
+class Circle {
+
+  constructor (x, y, r){
+    this.x =x;
+    this.y =y
+    this.r = r;
+    this.velocityX = Math.random()*4 - 2; // interval [-2;2]
+    this.velocityY = Math.random()*4 - 2; // interval [-2;2]
+  }
+
+  draw(context){
+    context.beginPath();
+    context.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    //context.fill();
+    context.stroke();
+  }
+
+  move(){
+    this.x += this.velocityX;
+    this.y += this.velocityY;
+  }
+
+
+  bounce(width){
+    if (this.x <=0 || this.x >= width){
+      this.velocityX *= -1;
+      //this.velocityY *= -1;
+    }
+    if (this.y <=0 || this.y >= width){
+      //this.velocityX *= -1;
+      this.velocityY *= -1;
+      ...
+    }
+  }
+}
